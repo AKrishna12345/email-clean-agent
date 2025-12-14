@@ -1,7 +1,7 @@
 #!/bin/bash
-# Script to start the backend server
+# Simple startup script for Railway
+# Railway provides PORT environment variable
 
-cd "$(dirname "$0")"
-source venv/bin/activate
-python3 -m uvicorn main:app --reload
-
+PORT=${PORT:-8080}
+echo "Starting server on port $PORT"
+exec uvicorn main:app --host 0.0.0.0 --port $PORT
