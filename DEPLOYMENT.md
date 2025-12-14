@@ -25,7 +25,9 @@ git push origin main
 2. Click "New Project"
 3. Select "Deploy from GitHub repo"
 4. Choose your repository
-5. Railway will detect the `backend/` directory
+5. **IMPORTANT:** After Railway creates the service, go to Settings → Service
+6. Set **"Root Directory"** to `backend` (this is critical!)
+7. Railway will now build from the backend directory
 
 ### 2.2 Configure Environment Variables
 
