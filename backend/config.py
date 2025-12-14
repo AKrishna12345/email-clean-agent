@@ -22,6 +22,20 @@ DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./email_clean_agent.db")
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
+# Environment detection
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+IS_PRODUCTION = ENVIRONMENT == "production"
+
+# CORS origins - allow both localhost and production URLs
+CORS_ORIGINS = [
+    FRONTEND_URL,
+    "http://localhost:5173",
+    "http://localhost:3000",
+]
+# Add production frontend URL if provided
+if IS_PRODUCTION and FRONTEND_URL and FRONTEND_URL != "http://localhost:5173":
+    CORS_ORIGINS.append(FRONTEND_URL)
+
 # Validate required environment variables
 if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET or GOOGLE_CLIENT_ID == "your_google_client_id_here":
     raise ValueError("GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set in .env file (replace placeholder values)")
