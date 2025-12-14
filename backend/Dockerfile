@@ -8,12 +8,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
-# Note: Dockerfile is in backend/, so copy from backend/ directory
-COPY backend/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code from backend directory
-COPY backend/ .
+# Copy application code
+COPY . .
 
 # Expose port
 EXPOSE 8000
