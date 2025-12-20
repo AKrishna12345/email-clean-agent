@@ -41,6 +41,14 @@ const Login = () => {
             </div>
           </div>
 
+          <div className="oauth-warning" role="note" aria-label="Google permissions notice">
+            <div className="oauth-warning-title">Important (first-time sign in)</div>
+            <div className="oauth-warning-text">
+              On the Google consent screen, please <strong>check/allow all requested permissions</strong>.
+              If you skip any, Google may prompt you to sign in a second time.
+            </div>
+          </div>
+
           <p className="login-description">
             Sign in with your Google account to get started. We only need access to organize your emails.
           </p>

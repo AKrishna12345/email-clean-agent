@@ -156,6 +156,27 @@
   text-align: center;
 }
 
+.oauth-warning {
+  background: rgba(251, 188, 5, 0.12);
+  border: 1px solid rgba(251, 188, 5, 0.35);
+  border-left: 4px solid #fbbc05;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  color: var(--color-text-primary);
+}
+
+.oauth-warning-title {
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.oauth-warning-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
 .google-signin-button {
   width: 100%;
   display: flex;
