@@ -1,67 +1,115 @@
 # Email Clean Agent
 
-Messy Inbox??? We got the fix. Login with your email address, give a range of emails, and watch the magic happen!
+AI-powered Gmail inbox cleanup. Sign in with Google, choose how many emails to process, and let the app classify + take cleanup actions.
 
-An AI-powered tool to help you clean and organize your Gmail inbox. Simply log in with your Google account, specify how many emails to process, and let AI classify and clean them automatically.
+## Access (Test Users)
+
+To be added to the test users list (so you can use the app), email **aryankrishna0404@gmail.com**.
 
 ## Features
 
-- 🔐 **Secure OAuth Login** - Sign in with your Google account
-- 🤖 **AI-Powered Classification** - Uses OpenAI to intelligently classify emails
-- 🧹 **Automated Cleanup** - Delete, archive, mark as read, or draft responses
-- 📊 **Summary Dashboard** - See what actions were taken on your emails
-- 🎨 **Beautiful UI** - Modern, Gmail-inspired interface
+- **Google OAuth**: Sign in securely with your Google account
+- **Gmail cleanup**: Archive / delete / mark as read (depending on configured actions)
+- **Dashboard + summary**: See what actions were taken
 
 ## Tech Stack
 
-- **Backend**: Python, FastAPI, SQLAlchemy (SQLite)
-- **Frontend**: React, Vite, React Router
-- **APIs**: Gmail API, OpenAI API
-- **Authentication**: Google OAuth 2.0
+- **Backend**: FastAPI (Python), SQLAlchemy
+- **Frontend**: React + Vite
+- **Integrations**: Gmail API, OpenAI (optional depending on features enabled)
 
-## Setup
+## Running Locally (Full Directions)
 
-See [SETUP.md](./SETUP.md) for detailed setup instructions.
+### Prerequisites
 
-### Quick Start
+- **Node.js**: 18+
+- **Python**: 3.9+ (local dev)
 
-1. **Backend Setup:**
-   ```bash
-   cd backend
-   python3 -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
+### 1) Backend setup
 
-2. **Generate Encryption Key:**
-   ```bash
-   python generate_key.py
-   ```
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
-3. **Create `.env` file** in `backend/` with your credentials (see SETUP.md)
+### 2) Create backend `.env`
 
-4. **Frontend Setup:**
-   ```bash
-   cd frontend
-   npm install
-   ```
+Create `backend/.env` with:
 
-5. **Run:**
-   - Backend: `uvicorn main:app --reload` (from backend/)
-   - Frontend: `npm run dev` (from frontend/)
+```env
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
 
-## Project Status
+# App configuration
+SECRET_KEY=any-random-string
+ENCRYPTION_KEY=your-44-character-base64-key
 
-✅ **Step 1: OAuth Authentication** - Complete
-- User can log in with Google
-- Tokens stored securely in database
-- Beautiful Gmail-themed UI
+# Optional (only required for LLM features)
+OPENAI_API_KEY=your_openai_api_key_here
 
-🚧 **Step 2: Email Range Input** - Ready (UI complete, backend pending)
-🚧 **Step 3: Gmail API Integration** - Pending
-🚧 **Step 4: LLM Classification** - Pending
-🚧 **Step 5: Action Execution** - Pending
-🚧 **Step 6: Summary Screen** - Pending
+# URLs
+BACKEND_URL=http://localhost:8000
+FRONTEND_URL=http://localhost:5173
+
+# Database
+DATABASE_URL=sqlite:///./email_clean_agent.db
+
+ENVIRONMENT=development
+```
+
+Generate an encryption key:
+
+```bash
+cd backend
+python generate_key.py
+```
+
+### 3) Start backend
+
+```bash
+cd backend
+source venv/bin/activate
+uvicorn main:app --reload
+```
+
+Backend should be available at:
+- `http://localhost:8000`
+- `http://localhost:8000/docs` (Swagger UI)
+
+### 4) Frontend setup + start
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend should be available at `http://localhost:5173`.
+
+### 5) Google OAuth setup (local)
+
+In Google Cloud Console:
+- **Authorized redirect URI**: `http://localhost:8000/auth/google/callback`
+- **JavaScript origin**: `http://localhost:5173`
+
+Then put the `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` into `backend/.env`.
+
+## Deployment
+
+- **Backend**: Railway
+- **Frontend**: Vercel
+
+See `DEPLOYMENT.md` for the full checklist and required environment variables.
+
+## Troubleshooting
+
+- **Frontend “VITE_API_URL” issues**: set `VITE_API_URL` in Vercel project settings to your Railway backend URL (no trailing slash recommended).
+- **OAuth redirect issues**: ensure `GOOGLE_REDIRECT_URI` matches exactly what’s configured in Google Cloud Console and your deployed backend URL.
+- **CORS issues**: ensure Railway `FRONTEND_URL` matches your Vercel URL (including `https://`).
 
 ## License
 

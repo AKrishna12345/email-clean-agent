@@ -3,6 +3,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+def _normalize_base_url(url: str | None) -> str | None:
+    """Ensure URLs used for redirects have a scheme (https://) and no trailing slash."""
+    if not url:
+        return url
+    url = url.strip().rstrip("/")
+    if url.startswith("http://") or url.startswith("https://"):
+        return url
+    # Vercel/Railway domains are commonly provided without scheme; default to https.
+    return f"https://{url}"
+
 # Google OAuth
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
@@ -19,8 +29,8 @@ ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY")  # Should be 32 characters for Fern
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./email_clean_agent.db")
 
 # Server URLs
-BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+BACKEND_URL = _normalize_base_url(os.getenv("BACKEND_URL", "http://localhost:8000"))
+FRONTEND_URL = _normalize_base_url(os.getenv("FRONTEND_URL", "http://localhost:5173"))
 
 # Environment detection
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
