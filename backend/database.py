@@ -5,7 +5,7 @@ from datetime import datetime
 import config
 
 # Create database engine
-engine = create_engine(config.DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(config.DATABASE_URL)
 
 # Create session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
