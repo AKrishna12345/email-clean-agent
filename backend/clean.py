@@ -130,22 +130,70 @@ async def start_clean(
 
         db.commit()
 
+        # Helper: build rollup stats for *all fetched emails* (new + existing)
+        def build_rollup_for_fetched_emails():
+            fetched_ids = [e.get("id") for e in emails if e.get("id")]
+            if not fetched_ids:
+                return [], {"summary": {}, "classifications": []}, {"success_count": 0, "failed_count": 0, "total": 0, "results": []}
+
+            items = (
+                db.query(EmailItem)
+                .filter(
+                    EmailItem.user_id == user.id,
+                    EmailItem.gmail_message_id.in_(fetched_ids),
+                )
+                .all()
+            )
+
+            classifications_from_db = []
+            for item in items:
+                classifications_from_db.append({
+                    "email_id": item.gmail_message_id,
+                    "category": item.category or "UNKNOWN",
+                    "confidence": item.confidence if item.confidence is not None else 0.0,
+                    "reason": item.reason or (item.last_error or ""),
+                })
+
+            formatted_all = format_classifications_for_display(classifications_from_db)
+
+            success_count = sum(1 for i in items if i.status == EmailItemStatus.SUCCESS)
+            failed_count = sum(1 for i in items if i.status == EmailItemStatus.FAILED)
+            results = [
+                {
+                    "email_id": i.gmail_message_id,
+                    "label": i.category or "UNKNOWN",
+                    "success": i.status == EmailItemStatus.SUCCESS,
+                    "error": None if i.status == EmailItemStatus.SUCCESS else (i.last_error or "Failed"),
+                }
+                for i in items
+            ]
+
+            labeling_rollup = {
+                "success_count": success_count,
+                "failed_count": failed_count,
+                "total": len(items),
+                "results": results,
+            }
+
+            return fetched_ids, formatted_all, labeling_rollup
+
         if not emails_to_process:
             run.status = EmailRunStatus.COMPLETED
             run.finished_at = datetime.utcnow()
             run.error = None
             db.commit()
+            fetched_ids, formatted_all, labeling_rollup = build_rollup_for_fetched_emails()
             return {
                 "run_id": run.id,
-                "message": "No new emails to process (already processed or skipped)",
+                "message": "All fetched emails were already processed (no new work needed)",
                 "email": request.email,
                 "requested_count": request.count,
-                "actual_count": 0,
-                "emails": [],
-                "classifications": [],
-                "summary": {},
-                "labeling": {"success_count": 0, "failed_count": 0, "total": 0, "results": []},
-                "status": "no_new_emails",
+                "actual_count": len(fetched_ids),
+                "emails": emails,
+                "classifications": formatted_all["classifications"],
+                "summary": formatted_all["summary"],
+                "labeling": labeling_rollup,
+                "status": "completed",
             }
 
         # Claim work: mark selected items PROCESSING and increment attempt_count
@@ -154,7 +202,7 @@ async def start_clean(
             item.attempt_count = (item.attempt_count or 0) + 1
             item.last_error = None
         db.commit()
-
+        
         # Step 4: Classify emails with LLM
         print(f"\n{'='*80}")
         print(f"STEP 4: Classifying emails with LLM")
@@ -204,7 +252,7 @@ async def start_clean(
                 'total': 0,
                 'error': str(label_error)
             }
-
+        
         # Update per-email statuses based on labeling results
         success_ids = set()
         failed_ids = set()
@@ -291,21 +339,18 @@ async def start_clean(
         run.error = labeling_error_message
         db.commit()
 
+        # Return rollup for *all fetched emails* so summary includes already-processed ones too
+        fetched_ids, formatted_all, labeling_rollup = build_rollup_for_fetched_emails()
         return {
             "run_id": run.id,
             "message": "Emails fetched, classified, and labeled successfully",
             "email": request.email,
             "requested_count": request.count,
-            "actual_count": result.get('actual_count', 0),
-            "emails": emails_to_process,
-            "classifications": formatted['classifications'],
-            "summary": formatted['summary'],
-            "labeling": {
-                "success_count": labeling_result.get('success_count', 0),
-                "failed_count": labeling_result.get('failed_count', 0),
-                "total": labeling_result.get('total', 0),
-                "results": labeling_result.get('results', [])
-            },
+            "actual_count": len(fetched_ids),
+            "emails": emails,
+            "classifications": formatted_all["classifications"],
+            "summary": formatted_all["summary"],
+            "labeling": labeling_rollup,
             "status": "completed"
         }
     except Exception as e:
