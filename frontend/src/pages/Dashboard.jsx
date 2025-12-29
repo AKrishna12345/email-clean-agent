@@ -7,7 +7,7 @@ import './Dashboard.css';
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [emailCount, setEmailCount] = useState(50);
+  const [emailCount, setEmailCount] = useState(20);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [emailData, setEmailData] = useState(null);

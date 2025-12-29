@@ -70,6 +70,9 @@ class EmailRun(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
 
+    # What the user asked for this run (1-100). Useful for debugging and progress reporting.
+    requested_count = Column(Integer, nullable=False)
+
     status = Column(Enum(EmailRunStatus), nullable=False, default=EmailRunStatus.NEW, index=True)
     started_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     finished_at = Column(DateTime, nullable=True)
@@ -106,6 +109,10 @@ class EmailItem(Base):
 
     # Processing state machine
     status = Column(Enum(EmailItemStatus), nullable=False, default=EmailItemStatus.NEW, index=True)
+
+    # Retry / debugging metadata
+    attempt_count = Column(Integer, nullable=False, default=0)
+    last_error = Column(Text, nullable=True)
 
     # Classification output
     category = Column(String, nullable=True, index=True)

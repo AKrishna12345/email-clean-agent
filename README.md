@@ -105,6 +105,12 @@ Then put the `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` into `backend/.env`.
 
 See `DEPLOYMENT.md` for the full checklist and required environment variables.
 
+## Learn the Codebase (Deep Dive)
+
+If you want an end-to-end walkthrough of how this app works (OAuth → Gmail → LLM → labeling → UI), read:
+
+- `docs/PROJECT_DEEP_DIVE.md`
+
 ## Troubleshooting
 
 - **Frontend “VITE_API_URL” issues**: set `VITE_API_URL` in Vercel project settings to your Railway backend URL (no trailing slash recommended).
