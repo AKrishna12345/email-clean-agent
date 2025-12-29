@@ -89,4 +89,3 @@ async def general_exception_handler(request: Request, exc: Exception):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={"detail": str(exc), "traceback": traceback.format_exc()}
         )
-

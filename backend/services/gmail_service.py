@@ -233,7 +233,8 @@ def fetch_emails(user: User, count: int, db) -> Dict:
     try:
         # Phase 1: Get email IDs
         message_ids = get_email_ids(user, count, db)
-        
+        #1 create rows of message_ids in the database
+
         if not message_ids:
             print("⚠️  No emails found in inbox")
             return {
@@ -283,4 +284,6 @@ def fetch_emails(user: User, count: int, db) -> Dict:
         import traceback
         print(traceback.format_exc())
         raise
+
+    
 

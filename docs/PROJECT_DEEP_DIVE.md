@@ -337,19 +337,19 @@ If you want to build larger-scale apps, prioritize these next:
 
 If you read files in this order, it will click quickly:
 
-1. `backend/main.py`
-2. `backend/config.py`
-3. `backend/database.py`
-4. `backend/auth.py`
-5. `backend/services/gmail_service.py`
-6. `backend/services/llm_service.py`
-7. `backend/services/gmail_label_service.py`
-8. `backend/clean.py`
-9. `frontend/src/services/api.js`
-10. `frontend/src/context/AuthContext.jsx`
-11. `frontend/src/pages/Login.jsx`
-12. `frontend/src/pages/AuthCallback.jsx`
-13. `frontend/src/pages/Dashboard.jsx`
-14. `frontend/src/pages/Summary.jsx`
+1. `backend/main.py` - DONE
+2. `backend/config.py` - DONE
+3. `backend/database.py` - DONE
+4. `backend/auth.py` - don't fully understand but come back to it once looking to change the logic to cookies
+5. `backend/services/gmail_service.py` - DONE
+6. `backend/services/llm_service.py` - skimmed
+7. `backend/services/gmail_label_service.py` - skimmed
+8. `backend/clean.py` - DONE
+9. `frontend/src/services/api.js` - DONE
+10. `frontend/src/context/AuthContext.jsx` - skimmed
+11. `frontend/src/pages/Login.jsx` - 
+12. `frontend/src/pages/AuthCallback.jsx` - 
+13. `frontend/src/pages/Dashboard.jsx` - 
+14. `frontend/src/pages/Summary.jsx` - 
 
 

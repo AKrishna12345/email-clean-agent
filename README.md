@@ -27,12 +27,12 @@ To be added to the test users list (so you can use the app), email **aryankrishn
 
 ### 1) Backend setup
 
-```bash
-cd backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+   ```bash
+   cd backend
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
 
 ### 2) Create backend `.env`
 
@@ -63,10 +63,10 @@ ENVIRONMENT=development
 
 Generate an encryption key:
 
-```bash
+   ```bash
 cd backend
-python generate_key.py
-```
+   python generate_key.py
+   ```
 
 ### 3) Start backend
 
@@ -82,9 +82,9 @@ Backend should be available at:
 
 ### 4) Frontend setup + start
 
-```bash
-cd frontend
-npm install
+   ```bash
+   cd frontend
+   npm install
 npm run dev
 ```
 
