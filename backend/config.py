@@ -3,7 +3,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def _normalize_base_url(url: str | None) -> str | None:
+from typing import Optional
+#helper method to normalize base urls
+def _normalize_base_url(url: Optional[str]) -> Optional[str]:
     """Ensure URLs used for redirects have a scheme (https://) and no trailing slash."""
     if not url:
         return url
